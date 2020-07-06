@@ -1,4 +1,3 @@
-# build stage
 FROM rust:latest as cargo-build
 
 RUN apt-get update && apt-get install libpq-dev musl-tools -y
@@ -10,7 +9,6 @@ COPY . .
 
 RUN RUSTFLAGS=-Clinker=musl-gcc cargo build --release --target=x86_64-unknown-linux-musl
 
-# final stage
 FROM alpine:latest
 
 RUN apk add postgresql-dev
