@@ -39,8 +39,8 @@ impl Like {
     }
 }
 
-#[table_name = "likes"]
 #[derive(Queryable, Insertable)]
+#[table_name = "likes"]
 pub struct LikeDB {
     pub id: Uuid,
     pub created_at: NaiveDateTime,
@@ -111,7 +111,7 @@ pub fn delete_like(_tweet_id: Uuid, conn: &DBPooledConnection) -> Result<(), Err
 }
 
 #[get("/tweets/{id}/likes")]
-pub async fn list(path: Path<(String,)>, pool: Data<DBPool>) -> HttpResponse {
+pub async fn list(path: Path<String>, pool: Data<DBPool>) -> HttpResponse {
     let conn = pool.get().expect(CONNECTION_POOL_ERROR);
 
     let likes =
@@ -128,7 +128,7 @@ pub async fn list(path: Path<(String,)>, pool: Data<DBPool>) -> HttpResponse {
 }
 
 #[post("/tweets/{id}/likes")]
-pub async fn plus_one(path: Path<(String,)>, pool: Data<DBPool>) -> HttpResponse {
+pub async fn plus_one(path: Path<String>, pool: Data<DBPool>) -> HttpResponse {
     let conn = pool.get().expect(CONNECTION_POOL_ERROR);
 
     let like =
@@ -141,7 +141,7 @@ pub async fn plus_one(path: Path<(String,)>, pool: Data<DBPool>) -> HttpResponse
 }
 
 #[delete("/tweets/{id}/likes")]
-pub async fn minus_one(path: Path<(String,)>, pool: Data<DBPool>) -> HttpResponse {
+pub async fn minus_one(path: Path<String>, pool: Data<DBPool>) -> HttpResponse {
     let conn = pool.get().expect(CONNECTION_POOL_ERROR);
 
     let _ = web::block(move || delete_like(Uuid::from_str(path.0.as_str()).unwrap(), &conn)).await;

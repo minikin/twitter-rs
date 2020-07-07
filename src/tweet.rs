@@ -46,15 +46,15 @@ impl Tweet {
     pub fn add_likes(&self, likes: Vec<Like>) -> Self {
         Self {
             id: self.id.clone(),
-            created_at: self.created_at.clone(),
+            created_at: self.created_at,
             message: self.message.clone(),
             likes,
         }
     }
 }
 
-#[table_name = "tweets"]
 #[derive(Queryable, Insertable)]
+#[table_name = "tweets"]
 pub struct TweetDB {
     pub id: Uuid,
     pub created_at: NaiveDateTime,
@@ -79,10 +79,9 @@ pub struct TweetRequest {
 
 impl TweetRequest {
     pub fn to_tweet(&self) -> Option<Tweet> {
-        match &self.message {
-            Some(message) => Some(Tweet::new(message.to_string())),
-            None => None,
-        }
+        self.message
+            .as_ref()
+            .map(|message| Tweet::new(message.to_string()))
     }
 }
 
@@ -175,7 +174,7 @@ pub async fn create(tweet_req: Json<TweetRequest>, pool: Data<DBPool>) -> HttpRe
 }
 
 #[get("/tweets/{id}")]
-pub async fn get(path: Path<(String,)>, pool: Data<DBPool>) -> HttpResponse {
+pub async fn get(path: Path<String>, pool: Data<DBPool>) -> HttpResponse {
     let conn = pool.get().expect(CONNECTION_POOL_ERROR);
     let tweet =
         web::block(move || find_tweet(Uuid::from_str(path.0.as_str()).unwrap(), &conn)).await;
@@ -197,7 +196,7 @@ pub async fn get(path: Path<(String,)>, pool: Data<DBPool>) -> HttpResponse {
 }
 
 #[delete("/tweets/{id}")]
-pub async fn delete(path: Path<(String,)>, pool: Data<DBPool>) -> HttpResponse {
+pub async fn delete(path: Path<String>, pool: Data<DBPool>) -> HttpResponse {
     let conn = pool.get().expect(CONNECTION_POOL_ERROR);
 
     let _ = web::block(move || delete_tweet(Uuid::from_str(path.0.as_str()).unwrap(), &conn)).await;
