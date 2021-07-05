@@ -12,7 +12,7 @@
 - Rust on the stable channel
 - PostgreSQL
 
-### Development:
+### Development
 
 1. Clone this repository & open in terminal.
 2. Set `DATABASE_URL` env varibale.
