@@ -1,4 +1,4 @@
-<h1 align="center">Twitter API in Rust</h1>
+<h1 align="center">Twitter API Clone in Rust</h1>
 
 # Content
 - [Requirements](#requirements)
