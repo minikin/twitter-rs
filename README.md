@@ -1,5 +1,7 @@
 <h1 align="center">Twitter API Clone in Rust</h1>
 
+[![Rust](https://github.com/minikin/twitter-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/minikin/twitter-rs/actions/workflows/rust.yml)
+
 # Content
 - [Requirements](#requirements)
 - [Development](#development)
