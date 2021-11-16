@@ -39,6 +39,12 @@ impl Like {
     }
 }
 
+impl Default for Like {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[derive(Queryable, Insertable)]
 #[table_name = "likes"]
 pub struct LikeDB {
